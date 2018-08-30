@@ -1,0 +1,25 @@
+@startuml
+
+skinparam usecase{
+  BackgroundColor<<Implémentation à venir>> PowderBlue
+  BackgroundColor<<Implémentation en cours>> IMPLEMENTATION
+}
+
+rectangle Super-Admin{
+  :Administrateur: as Admin <<Humain>>
+  :Super-Administrateur: as SuperAdmin <<Humain>>
+
+  SuperAdmin -up-|> Admin
+
+  (Consulter la liste des administrateurs) as (ViewAdminList)
+    (Modification d'un administrateur) as (EditAdmin)
+    (ViewAdminList) <-. (EditAdmin) : <<extends>>
+    (Suppression d'un administrateur) as (DeleteAdmin)
+    (ViewAdminList) <-. (DeleteAdmin) : <<extends>>
+    (Ajout d'un administrateur) as (AddAdmin)
+    (ViewAdminList) <-. (AddAdmin)
+
+  SuperAdmin -down- (ViewAdminList)
+}
+
+@enduml

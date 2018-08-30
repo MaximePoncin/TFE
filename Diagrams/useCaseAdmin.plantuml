@@ -1,0 +1,108 @@
+@startuml
+
+skinparam usecase{
+  BackgroundColor<<Implémentation à venir>> PowderBlue
+  BackgroundColor<<Implémentation en cours>> IMPLEMENTATION
+}
+
+rectangle Administration_Clients_Publicitaire {
+  :Administrateur: as Admin <<Humain>>
+
+  (Déconnexion) as (deco)
+
+  Admin -up- (deco)
+
+
+  /'(Consulter la liste des réservations) as (ViewBookedStaysList)
+    (Modification d'une réservation) as (EditBookedStay)
+    (ViewBookedStaysList) <-up. (EditBookedStay) : <<extends>>
+    (Suppression d'une réservation) as (DeleteBookedStay)
+    (ViewBookedStaysList) <-up. (DeleteBookedStay) : <<extends>>
+    (Ajout d'une réservation) as (AddBookedStay)
+    (ViewBookedStaysList) <-up. (AddBookedStay) : <<extends>>
+
+  Admin -up- (ViewBookedStaysList)
+
+  (Consulter la liste des séjours) as (ViewStaysList)
+    (Modification d'un séjour) as (EditStay)
+    (ViewStaysList) <-up. (EditStay) : <<extends>>
+    (Suppression d'un séjour) as (DeleteStay)
+    (ViewStaysList) <-up. (DeleteStay) : <<extends>>
+    (Ajout d'un séjour) as (AddStay)
+    (ViewStaysList) <-up. (AddStay) : <<extends>>
+
+  Admin -up- (ViewStaysList)
+
+  (Consulter la liste des utilisateurs) as (ViewUsersList)
+    (Modification d'un utilisateur) as (EditUser)
+    (ViewUsersList) <-down. (EditUser) : <<extends>>
+    (Suppression d'un utilisateur) as (DeleteUser)
+    (ViewUsersList) <-down. (DeleteUser) : <<extends>>
+    (Ajout d'un utilisateur) as (AddUser)
+    (ViewUsersList) <-down. (AddUser) : <<extends>>
+
+  Admin -down- (ViewUsersList)
+
+  (Consulter la liste des standings) as (ViewStandingsList)
+    (Modification d'un standing) as (EditStanding)
+    (ViewStandingsList) <-down. (EditStanding) : <<extends>>
+    (Suppression d'un standing) as (DeleteStanding)
+    (ViewStandingsList) <-down. (DeleteStanding) : <<extends>>
+    (Ajout d'un standing) as (AddStanding)
+    (ViewStandingsList) <-down. (AddStanding) : <<extends>>
+
+  Admin -down- (ViewStandingsList)
+
+  (Consulter la liste des types de pension) as (ViewBoardTypesList)
+    (Modification d'un type de pension) as (EditBoardType)
+    (ViewBoardTypesList) <-up. (EditBoardType) : <<extends>>
+    (Suppression d'un type de pension) as (DeleteBoardType)
+    (ViewBoardTypesList) <-left. (DeleteBoardType) : <<extends>>
+    (Ajout d'un type de pension) as (AddBoardType)
+    (ViewBoardTypesList) <-down. (AddBoardType) : <<extends>>
+
+  Admin -left-- (ViewBoardTypesList)
+
+  (Consulter la liste des activités) as (ViewActivitysList)
+    (Modification d'un activité) as (EditActivity)
+    (ViewActivitysList) <-up. (EditActivity) : <<extends>>
+    (Suppression d'un activité) as (DeleteActivity)
+    (ViewActivitysList) <-left. (DeleteActivity) : <<extends>>
+    (Ajout d'un activité) as (AddActivity)
+    (ViewActivitysList) <-down. (AddActivity) : <<extends>>
+
+  Admin -left- (ViewActivitysList)
+
+  (Consulter la liste des thèmes) as (ViewThemesList)
+    (Modification d'un thème) as (EditTheme)
+    (ViewThemesList) <-up. (EditTheme) : <<extends>>
+    (Suppression d'un thème) as (DeleteTheme)
+    (ViewThemesList) <-right. (DeleteTheme) : <<extends>>
+    (Ajout d'un thème) as (AddTheme)<<Implémentation à venir>>
+    (ViewThemesList) <-down. (AddTheme) : <<extends>>
+
+  Admin -right- (ViewThemesList)
+
+  (Consulter la liste des types de bière) as (ViewBeerTypesList)
+    (Modification d'un type de bière) as (EditBeerType)
+    (ViewBeerTypesList) <-up. (EditBeerType) : <<extends>>
+    (Suppression d'un type de bière) as (DeleteBeerType)
+    (ViewBeerTypesList) <-right. (DeleteBeerType) : <<extends>>
+    (Ajout d'un type de bière) as (AddBeerType)
+    (ViewBeerTypesList) <-down. (AddBeerType) : <<extends>>
+
+  Admin -right- (ViewBeerTypesList)'/
+
+  (Consulter la liste des clients publicitaire) as (ViewAdvertClientsList)
+    (Modification d'un client publicitaire) as (EditAdvertClient)
+    (ViewAdvertClientsList) <-- (EditAdvertClient) : <<extends>>
+    (Suppression d'un client publicitaire) as (DeleteAdvertClient)
+    (ViewAdvertClientsList) <-- (DeleteAdvertClient) : <<extends>>
+    (Ajout d'un client publicitaire) as (AddAdvertClient)
+    (ViewAdvertClientsList) <-- (AddAdvertClient) : <<extends>>
+
+  Admin -down- (ViewAdvertClientsList)
+
+}
+
+@enduml

@@ -1,0 +1,43 @@
+@startuml
+
+  skinparam usecase{
+    BackgroundColor<<Implémentation à venir>> PowderBlue
+    BackgroundColor<<Not entirely implemented>> IMPLEMENTATION
+  }
+
+  rectangle utilisateurs_classiques {
+
+    :Utilisateur non-authentifié: as AnonymUser <<Humain>>
+    :Utilisateur authentifié: as User <<Humain>>
+
+    AnonymUser <|--- User
+
+
+    (Consultation de la liste des points de ventes) as (ViewSalePointsList)
+    (Consultation de la liste des clients publicitaires) as (ViewAdvertClientsList)
+    (Consultation de la liste des séjours disponibles) as (ViewAvailableStaysList)
+    (Connexion) as (Connect)
+    (Inscription) as (Register)
+    (Choix de la langue) as (ChooseLang)
+
+    AnonymUser --- (ViewSalePointsList)
+    AnonymUser --- (ViewAdvertClientsList)
+    AnonymUser --- (ViewAvailableStaysList)
+    AnonymUser --- (Connect)
+    AnonymUser --- (Register)
+    AnonymUser --- (ChooseLang)
+
+
+    (Réservation d'un séjour) as (BookStay)
+      (ViewAvailableStaysList) <-. (BookStay) : <<extends>>
+    (Déconnexion) as (Disconnect)
+    (Consultation des infos personnelles) as (ViewPersonalData)
+      (Modification des données personnelles) as (EditPersonalData)
+      (ViewPersonalData) <-. (EditPersonalData) : <<extends>>
+
+    User --- (BookStay)
+    User --- (Disconnect)
+    User --- (ViewPersonalData)
+}
+
+@enduml

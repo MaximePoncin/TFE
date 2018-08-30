@@ -1,0 +1,119 @@
+@startuml
+
+enum Role{
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+
+class Utilisateur{
+  String mail
+  String numTelephone
+  String mot-de-passe
+}
+
+class Adresse{
+  String rue
+  String num
+  String codePostal
+  String pays
+  String ville
+}
+
+class Localité{
+  String pays
+  String ville
+}
+
+class Personne{
+  String nom
+  String prénom
+  Date dateNaissance
+}
+
+class Réservation{
+  Date dateArrivée
+  Date dateDépart
+  Date débutSéjour
+  Date débutSéjourAlternatif
+  Int nbPersonnes
+  Date dateRéservation
+  Date datePayement
+  Int prix
+}
+
+enum Standing{
+  CAMPING
+  AUBERGE_JEUNNESSE
+  HOTEL_1_ETOILE
+  HOTEL_2_ETOILES
+  HOTEL_3_ETOILES
+  HOTEL_4_ETOILES
+  HOTEL_5_ETOILES
+  ...
+}
+
+enum TypePension{
+  PETIT_DEJ
+  DEMIE_PENSION
+  ...
+}
+
+class Séjour{
+  String nom
+  Int nbNuitées
+  Int prixAPartirDe
+  Boolean disponible
+}
+
+class Theme{
+  String nom
+}
+
+class Activité{
+  String nom
+}
+
+class PointDeVente{
+  String nom
+}
+
+class ClientPublicitaire{
+  String nom
+  String URL
+  String mail
+}
+
+enum TypeBière{
+  BLOND
+  STOUT
+  IPA
+  LAGER
+  ...
+}
+
+class Image{
+  String nom
+  String URL
+}
+
+Utilisateur --> "1" Role
+Utilisateur --|> Personne
+Utilisateur --> "1" Adresse
+Personne "1..*" -- "1..*" Réservation
+Utilisateur "1" -- "*" Réservation
+Réservation "*" -- "1" Séjour
+Séjour "*" -- "1" Theme
+Séjour "*" -- "1..*" Activité
+Réservation --> "1" Standing
+Réservation --> "1" TypePension
+Séjour "*" -- "1" Localité
+Séjour "1" -- "1..*" Image
+PointDeVente "0..1" <-- Utilisateur
+PointDeVente --> "1" Adresse
+PointDeVente "1" -- "1..*" Image
+ClientPublicitaire --> "1" Adresse
+ClientPublicitaire --> "1..*" TypeBière
+ClientPublicitaire "1" -- "1..*" Image
+
+@enduml
