@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const getAllPersons = require('../person/functions/getAllPersons');
 const getPerson = require('../person/functions/getPerson');
@@ -21,7 +22,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllPersons();
+      return getAllPersons()
+        .then(promisedPersons => {
+          return h.response(promisedPersons).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -41,13 +49,14 @@ const routes =
       return savePerson(request.payload)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while saving user');
+            // throw new Error('Error while saving user');
+            return Boom.badImplementation("Error while saving user");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -69,12 +78,14 @@ const routes =
       return getPerson(request.params.id)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while getting person');
+            // throw new Error('Error while getting person');
+            return Boom.notFound("No such person found");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(200);
         })
         .catch(err => {
-          return err;
+          console.log(err);
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -97,12 +108,12 @@ const routes =
       return updatePerson(request.params.id, request.payload)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while updating person');
+            return Boom.notFound("Cannot found this person");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -124,12 +135,13 @@ const routes =
       return deletePerson(request.params.id)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while deleting person');
+            // throw new Error('Error while deleting person');
+            return Boom.notFound("Cannot found this person");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

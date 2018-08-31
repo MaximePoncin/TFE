@@ -1,3 +1,5 @@
+const Boom = require('boom');
+
 const mailSchema = require('../mail/schema')
 
 const sendMail = require('../mail/functions/sendMail');
@@ -18,11 +20,11 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return sendMail(request.payload);
-      // console.log(request.payload);
-      // return request.payload;
+      if(sendMail(request.payload)) {
+        return h.code(204);
+      }
 
-
+      return Boom.badImplementation("An internal error occured");
     }
   }
 ];

@@ -7,23 +7,22 @@ module.exports = (newUser) => {
   return getAllUsers()
   .then(promisedAllUsers => {
     if(_.find(promisedAllUsers, {'mail': newUser.mail})) {
-      // throw new Error('User Already exists in storage');
-      return Boom.forbidden("Mail already used by another user");
-      // return false;
+      // return Boom.forbidden("Mail already used by another user");
+      return {error: "Mail already used"};
     } else {
       return saveUser(newUser)
       .then(promisedNewUser => {
-        if(!promisedNewUser) throw new Error('Registration error');
+        if(!promisedNewUser) return {error: "Could not register new user"};
         return promisedNewUser;
       })
       .catch(err => {
         // console.log(err);
-        return Boom.boomify(err);
+        return err;
       })
     }
   })
   .catch(err => {
     // console.log(err);
-    return Boom.boomify(err);
+    return err;
   })
 }

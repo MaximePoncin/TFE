@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const ThemeSchema = require('../theme/schema');
 
@@ -21,7 +22,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllThemes();
+      return getAllThemes()
+        .then(promisedThemes => {
+          return h.response(promisedThemes).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -41,13 +49,13 @@ const routes =
       return saveTheme(request.payload)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while saving theme');
+            return Boom.badImplementation("Error while creating the theme");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -69,12 +77,12 @@ const routes =
       return getTheme(request.params.id)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while getting theme');
+            return Boom.notFound("Theme not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -97,12 +105,12 @@ const routes =
       return updateTheme(request.params.id, request.payload)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while updating theme');
+            return Boom.notFound("Theme not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -124,12 +132,12 @@ const routes =
       return deleteTheme(request.params.id)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while deleting theme');
+            return Boom.notFound("Theme not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

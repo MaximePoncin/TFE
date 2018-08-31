@@ -18,14 +18,19 @@ const routes = [
     handler: (request, h) => {
       return registerUser(request.payload)
       .then(promisedRegisteredUser => {
-        // if( !promisedRegisteredUser) throw new Error ('Registration error');
-        if(Boom.isBoom(promisedRegisteredUser)) return Boom.forbidden("Mail already used by another user")
-        return h.response(promisedRegisteredUser).code(201);
+        switch (promisedRegisteredUser.error) {
+          case "Mail already used":
+            return Boom.forbidden("Mail already used by another user");
+          case "Could not register new user":
+            return Boom.badImplementation("Could not register new user");
+          default:
+            return h.response(promisedRegisteredUser).code(201);
+        }
       })
       .catch(err => {
         // console.log(err);
         // return Boom.boomify(err);
-        return err;
+        return Boom.badImplementation("An internal error occured", err);
       })
     }
   }

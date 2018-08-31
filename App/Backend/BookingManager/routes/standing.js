@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const StandingSchema = require('../standing/schema');
 
@@ -23,12 +24,12 @@ const routes =
     handler: (request, h) => {
       return getAllStandings()
         .then(promisedStanding => {
-          if(!promisedStanding) throw new Error("Error while getting all standings")
-          return promisedStanding;
+          if(!promisedStanding) return Boom.notFound("Standings not found")
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },
@@ -49,13 +50,13 @@ const routes =
       return saveStanding(request.payload)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while saving standing');
+            return Boom.notFound("Standing not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -77,12 +78,12 @@ const routes =
       return getStanding(request.params.id)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while getting standing');
+            return Boom.notFound("Standing not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -105,12 +106,12 @@ const routes =
       return updateStanding(request.params.id, request.payload)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while updating standing');
+            return Boom.notFound("Standing not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -132,12 +133,12 @@ const routes =
       return deleteStanding(request.params.id)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while deleting standing');
+            return Boom.notFound("Standing not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

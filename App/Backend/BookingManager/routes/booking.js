@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const BookingSchema = require('../booking/schema');
 
@@ -21,7 +22,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllBookings();
+      return getAllBookings()
+        .then(promisedBookings => {
+          return h.response(promisedBookings).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -41,13 +49,13 @@ const routes =
       return saveBooking(request.payload)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while saving booking');
+            return Boom.notFound("Booking not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -69,12 +77,12 @@ const routes =
       return getBooking(request.params.id)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while getting booking');
+            return Boom.notFound("Booking not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -97,12 +105,12 @@ const routes =
       return updateBooking(request.params.id, request.payload)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while updating booking');
+            return Boom.notFound("Booking not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -124,12 +132,12 @@ const routes =
       return deleteBooking(request.params.id)
         .then(promisedStanding => {
           if (!promisedStanding) {
-            throw new Error('Error while deleting booking');
+            return Boom.notFound("Booking not found");
           }
-          return promisedStanding;
+          return h.response(promisedStanding).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

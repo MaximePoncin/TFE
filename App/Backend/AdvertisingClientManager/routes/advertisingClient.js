@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const AdvertisingClientSchema = require('../advertisingClient/schema');
 
@@ -21,7 +22,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllAdvertisingClients();
+      return getAllAdvertisingClients()
+        .then(promisedAdvertisingClients => {
+          return h.response(promisedAdvertisingClients).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -41,13 +49,13 @@ const routes =
       return saveAdvertisingClient(request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while saving advertisingClient');
+            return Boom.notFound("Advertising client not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -69,12 +77,12 @@ const routes =
       return getAdvertisingClient(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while getting advertisingClient');
+            return Boom.notFound("Advertising client not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -97,12 +105,12 @@ const routes =
       return updateAdvertisingClient(request.params.id, request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while updating advertisingClient');
+            return Boom.notFound("Advertising client not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -124,12 +132,12 @@ const routes =
       return deleteAdvertisingClient(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while deleting advertisingClient');
+            return Boom.notFound("Advertising client not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

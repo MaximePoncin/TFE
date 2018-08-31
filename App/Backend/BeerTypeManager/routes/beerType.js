@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const BeerTypeSchema = require('../beerType/schema');
 
@@ -22,7 +23,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllBeerTypes();
+      return getAllBeerTypes()
+        .then(promisedBeerTypes => {
+          return h.response(promisedBeerTypes).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -42,13 +50,13 @@ const routes =
       return saveBeerType(request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while saving beerType');
+            return Boom.notFound("Beer type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },
@@ -71,13 +79,13 @@ const routes =
       return getManyBeerTypes(request.payload.ids)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while saving beerType');
+            return Boom.notFound("Beer type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -99,12 +107,12 @@ const routes =
       return getBeerType(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while getting beerType');
+            return Boom.notFound("Beer type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -127,12 +135,12 @@ const routes =
       return updateBeerType(request.params.id, request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while updating beerType');
+            return Boom.notFound("Beer type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -154,12 +162,12 @@ const routes =
       return deleteBeerType(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while deleting beerType');
+            return Boom.notFound("Beer type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }
