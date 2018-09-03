@@ -1,3 +1,5 @@
-require("../assets/stylesheets/styles.scss");
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
 
-let a = "J'apprends Webpack !";
+ReactDOM.render(<App />, document.getElementById('root'));

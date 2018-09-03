@@ -1,11 +1,13 @@
 const webpack = require("webpack"),
       path = require("path"),
+      HtmlWebpackPlugin = require("html-webpack-plugin"),
       MiniCssExtractPlugin = require("mini-css-extract-plugin"),
       OptimizeCSSAssets = require("optimize-css-assets-webpack-plugin"),
       UglifyJsPlugin = require("uglifyjs-webpack-plugin"),
       DashboardPlugin = require("webpack-dashboard/plugin");
 
 let config = {
+  mode: "development",
   entry: "./src/index.js",
   output: {
     path: path.resolve(__dirname, "./public"),
@@ -18,6 +20,13 @@ let config = {
       loader: "babel-loader"
     },
     {
+      test: /\.html$/,
+      use: {
+        loader: 'html-loader',
+        options: {}
+      }
+    },
+    {
       test: /\.scss$/,
       use: [
         'css-hot-loader',
@@ -28,10 +37,15 @@ let config = {
     }]
   },
   plugins: [
-    new MiniCssExtractPlugin({
-      filename: "style.css"
-    }),
-    new DashboardPlugin()
+    // new MiniCssExtractPlugin({
+    //   filename: "style.css"
+    // }),
+    // new DashboardPlugin(),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+      inject: 'body'
+    })
   ],
   devServer: {
     contentBase: path.resolve(__dirname, "./public"),
@@ -40,19 +54,13 @@ let config = {
     open: true,
     hot: true
   },
-  devtool: "eval-source-map",
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin(),
-      new OptimizeCSSAssets()
-    ]
-  }
-}
-
-if(process.env.NODE_ENV === "production") {
-  module.exports.plugins.push(
-    new OptimizeCSSAssets()
-  );
+  devtool: "inline-source-map",
+  // optimization: {
+  //   minimizer: [
+  //     new UglifyJsPlugin(),
+  //     new OptimizeCSSAssets()
+  //   ]
+  // }
 }
 
 module.exports = config;
