@@ -2,6 +2,7 @@ import { ADD_STAY, UPDATE_STAY, REMOVE_STAY } from '../constants/action-types';
 import _ from 'lodash';
 
 const initialState = {
+  loggedIn: false,
   stays: [{id: "Test"}, {id: "Testeuh !"}],
 };
 
