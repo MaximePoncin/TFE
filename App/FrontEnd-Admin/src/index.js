@@ -1,5 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
+import propTypes from 'prop-types';
+import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import store from './store';
 import App from './App';
+import './assets/stylesheets/styles.scss';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+render(
+  <Provider store={store}>
+    <Router>
+      <Route path="/:filter?" component={App} />
+    </Router>
+  </Provider>,
+  document.getElementById('root')
+);

@@ -1,14 +1,14 @@
 const webpack = require("webpack"),
       path = require("path"),
       HtmlWebpackPlugin = require("html-webpack-plugin"),
-      MiniCssExtractPlugin = require("mini-css-extract-plugin"),
+      ExtractTextPlugin = require("extract-text-webpack-plugin"),
       OptimizeCSSAssets = require("optimize-css-assets-webpack-plugin"),
       UglifyJsPlugin = require("uglifyjs-webpack-plugin"),
       DashboardPlugin = require("webpack-dashboard/plugin");
 
 let config = {
   mode: "development",
-  entry: "./src/index.js",
+  entry: ['./src/index.js'],
   output: {
     path: path.resolve(__dirname, "./public"),
     filename: "./bundle.js"
@@ -27,20 +27,18 @@ let config = {
       }
     },
     {
-      test: /\.scss$/,
-      use: [
-        'css-hot-loader',
-        MiniCssExtractPlugin.loader,
-        'css-loader',
-        'sass-loader'
-      ]
+      test: /\.(sa|sc|c)ss$/,
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: ['css-loader', 'sass-loader']
+      })
     }]
   },
   plugins: [
-    // new MiniCssExtractPlugin({
-    //   filename: "style.css"
-    // }),
-    // new DashboardPlugin(),
+    new ExtractTextPlugin({
+      filename: 'styles.css'
+    }),
+    new DashboardPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html',
       filename: 'index.html',
@@ -53,14 +51,7 @@ let config = {
     inline: true,
     open: true,
     hot: true
-  },
-  devtool: "inline-source-map",
-  // optimization: {
-  //   minimizer: [
-  //     new UglifyJsPlugin(),
-  //     new OptimizeCSSAssets()
-  //   ]
-  // }
+  }
 }
 
 module.exports = config;
