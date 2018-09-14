@@ -1,4 +1,9 @@
-import { ADD_STAY, UPDATE_STAY, REMOVE_STAY } from '../constants/action-types';
+import { LOG_IN, ADD_STAY, UPDATE_STAY, REMOVE_STAY } from '../constants/action-types';
+
+export const logIn = values => ({
+  type: LOG_IN,
+  payload: values
+});
 
 export const addStay = stay => ({
   type: ADD_STAY,
