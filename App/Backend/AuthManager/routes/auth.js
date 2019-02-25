@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi')
+      Boom = require('boom');
 
 const authUser = require('../auth/functions/auth');
 
@@ -21,13 +22,26 @@ const routes = [
       return authUser(request.payload.userId, request.payload.userPasswd)
         .then(promisedAuth => {
           if (!promisedAuth) {
-            throw new Error('Error while authentication');
+            return Boom.badImplementation("An internal error occured");
           }
-          return promisedAuth;
+          return h.response(promisedAuth).code(200);
         })
         .catch(err => {
-          return err;
+          console.log(err);
+          return h.response(err).code(500);
         })
+
+    //   if(authResult.error) {
+    //     switch (authResult.error) {
+    //       case "Error while authentication":
+    //         return h.response(authResult).code(500);
+    //       case "Wrong credentials":
+    //         return h.response(authResult).code(200);
+    //       // default:
+    //     }
+    //   } else {
+    //     return h.reponse(authResult).code(200);
+    //   }
     }
   }
 ];

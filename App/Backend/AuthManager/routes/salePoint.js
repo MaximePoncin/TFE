@@ -21,7 +21,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllSalePoints();
+      return getAllSalePoints()
+        .then(promisedSalePoints => {
+          return h.response(promisedSalePoints).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -41,13 +48,13 @@ const routes =
       return saveSalePoint(request.payload)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while saving salePoint');
+            return Boom.notFound("Sale point not found");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -69,12 +76,12 @@ const routes =
       return getSalePoint(request.params.id)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while getting salePoint');
+            return Boom.notFound("Sale point not found");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -97,12 +104,12 @@ const routes =
       return updateSalePoint(request.params.id, request.payload)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while updating salePoint');
+            return Boom.notFound("Sale point not found");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -124,12 +131,12 @@ const routes =
       return deleteSalePoint(request.params.id)
         .then(promisedPerson => {
           if (!promisedPerson) {
-            throw new Error('Error while deleting salePoint');
+            return Boom.notFound("Sale point not found");
           }
-          return promisedPerson;
+          return h.response(promisedPerson).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

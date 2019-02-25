@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const ActivitySchema = require('../activity/schema');
 
@@ -20,7 +21,14 @@ const routes =
       auth: false
     },
     handler: (request, h) => {
-      return getAllActivities();
+      return getAllActivities()
+      .then(promisedActivities => {
+        return h.response(promisedActivities).code(200);
+      })
+      .catch(err => {
+        console.log(err);
+        return Boom.badImplementation("An internal error occured");
+      })
     }
   },
   {
@@ -40,13 +48,13 @@ const routes =
       return saveActivity(request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while saving activity');
+            return Boom.notFound("Activity not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -66,12 +74,12 @@ const routes =
       return getActivity(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while getting activity');
+            return Boom.notFound("Activity not found");
           }
-          return promisedBoardType;ActivitySchema
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -94,12 +102,12 @@ const routes =
       return updateActivity(request.params.id, request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while updating activity');
+            return Boom.notFound("Activity not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -121,12 +129,12 @@ const routes =
       return deleteActivity(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while deleting activity');
+            return Boom.notFound("Activity not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -147,12 +155,12 @@ const routes =
       return getManyActivities(request.payload.ids)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while getting activities');
+            return Boom.notFound("Activity not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

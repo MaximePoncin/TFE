@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const getAllUsers = require('../user/functions/getAllUsers');
 const getUser = require('../user/functions/getUser');
@@ -22,7 +23,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllUsers();
+      return getAllUsers()
+        .then(promisedUsers => {
+          return h.response(promisedUsers).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -40,13 +48,13 @@ const routes =
       return saveUser(request.payload)
         .then(promisedUser => {
           if (!promisedUser) {
-            throw new Error('Error while saving user');
+            return Boom.notFound("User not found");
           }
-          return promisedUser;
+          return h.response(promisedUser).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -68,13 +76,13 @@ const routes =
       return getUser(request.params.id)
         .then(promisedUser => {
           if (!promisedUser) {
-            throw new Error('Error while getting user');
+            return Boom.notFound("User not found");
           }
-          return promisedUser;
+          return h.response(promisedUser).code(200);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -93,17 +101,17 @@ const routes =
       }
     },
     handler: (request, h) => {
-      console.log(request.params.mail);
       return getUserByMail(request.params.mail)
         .then(promisedUser => {
           if (!promisedUser) {
-            throw new Error('Error while getting user');
+            // throw new Error('Error while getting user');
+            return Boom.notFound("User not found");
           }
-          return promisedUser;
+          return h.response(promisedUser).code(200);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -126,12 +134,12 @@ const routes =
       return updateUser(request.params.id, request.payload)
         .then(promisedUser => {
           if (!promisedUser) {
-            throw new Error('Error while updating user');
+            return Boom.notFound("User not found");
           }
-          return promisedUser;
+          return h.response(promisedUser).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -153,12 +161,12 @@ const routes =
       return deleteUser(request.params.id)
         .then(promisedUser => {
           if (!promisedUser) {
-            throw new Error('Error while deleting user');
+            return Boom.notFound("User not found");
           }
-          return promisedUser;
+          return h.response(promisedUser).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

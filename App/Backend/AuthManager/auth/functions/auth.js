@@ -23,7 +23,9 @@ module.exports = (userId, userPasswd) => {
         user: user
       };
     } else {
-      throw new Error('Wrong credentials')
+      return {
+        error: "Wrong credentials"
+      }
     }
   })
   .catch(err => {

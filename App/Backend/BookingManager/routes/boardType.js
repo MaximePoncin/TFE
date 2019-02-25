@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const BoardTypeSchema = require('../boardType/schema');
 
@@ -21,7 +22,14 @@ const routes =
       }
     },
     handler: (request, h) => {
-      return getAllBoardTypes();
+      return getAllBoardTypes()
+        .then(promisedBoardTypes => {
+          return h.response(promisedBoardTypes).code(200);
+        })
+        .catch(err => {
+          console.log(err);
+          return Boom.badImplementation("An internal error occured");
+        })
     }
   },
   {
@@ -41,13 +49,13 @@ const routes =
       return saveBoardType(request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while saving boardType');
+            return Boom.notFound("Board type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -69,12 +77,12 @@ const routes =
       return getBoardType(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while getting boardType');
+            return Boom.notFound("Board type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -97,12 +105,12 @@ const routes =
       return updateBoardType(request.params.id, request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while updating boardType');
+            return Boom.notFound("Board type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -124,12 +132,12 @@ const routes =
       return deleteBoardType(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while deleting boardType');
+            return Boom.notFound("Board type not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }

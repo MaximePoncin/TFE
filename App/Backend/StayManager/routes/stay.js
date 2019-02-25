@@ -1,4 +1,5 @@
-const Joi = require('joi');
+const Joi = require('joi'),
+      Boom = require('boom');
 
 const StaySchema = require('../stay/schema');
 
@@ -19,7 +20,14 @@ const routes =
       auth: false
     },
     handler: (request, h) => {
-      return getAllStays();
+      return getAllStays()
+      .then(promisedStays => {
+        return h.response(promisedStays).code(200);
+      })
+      .catch(err => {
+        console.log(err);
+        return Boom.badImplementation("An internal error occured");
+      })
     }
   },
   {
@@ -39,13 +47,13 @@ const routes =
       return saveStay(request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while saving stay');
+            return Boom.badImplementation("An internal error occured");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(201);
         })
         .catch(err => {
           console.log(err);
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -65,12 +73,12 @@ const routes =
       return getStay(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while getting stay');
+            return Boom.notFound("Stay not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -93,12 +101,12 @@ const routes =
       return updateStay(request.params.id, request.payload)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while updating stay');
+            return Boom.notFound("Stay not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   },{
@@ -120,12 +128,12 @@ const routes =
       return deleteStay(request.params.id)
         .then(promisedBoardType => {
           if (!promisedBoardType) {
-            throw new Error('Error while deleting stay');
+            return Boom.notFound("Stay not found");
           }
-          return promisedBoardType;
+          return h.response(promisedBoardType).code(200);
         })
         .catch(err => {
-          return err;
+          return Boom.badImplementation("An internal error occured", err);
         })
     }
   }
