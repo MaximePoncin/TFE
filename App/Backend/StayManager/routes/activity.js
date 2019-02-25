@@ -17,9 +17,7 @@ const routes =
     config: {
       tags: ['api'],
       description: "Get all activities in storage",
-      auth: {
-        scope: ["SuperAdmin", "Admin", "User"]
-      }
+      auth: false
     },
     handler: (request, h) => {
       return getAllActivities();
@@ -62,9 +60,7 @@ const routes =
           id: Joi.string().required()
         }
       },
-      auth: {
-        scope: ["SuperAdmin", "Admin", "User"]
-      }
+      auth: false
     },
     handler: (request, h) => {
       return getActivity(request.params.id)
@@ -144,9 +140,7 @@ const routes =
           ids: Joi.array().items(Joi.string().required())
         }
       },
-      auth: {
-        scope: ["SuperAdmin", "Admin", "User"]
-      }
+      auth: false
     },
     handler: (request, h) => {
       console.log(request.payload);

@@ -11,10 +11,10 @@ export default class Auth {
     })
     .then(response => {
       if(!response.ok) {
-        throw new Error('Authentication error');
-      } else {
-        return response.json();
+        console.log('Erreur de connexion');
       }
+
+      return response.json();
     })
     .then(json => {
       return json;

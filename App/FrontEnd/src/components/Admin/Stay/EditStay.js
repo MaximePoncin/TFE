@@ -610,7 +610,7 @@ class EditStay extends Component {
                     value={this.handleAvailability}
                     // value={this.state.available}
                   >
-                    {Locale.stay.available}
+                    {Locale[localStorage.getItem('LPC_beerTour_locale')].stay.available}
                   </Checkbox>
                 </FormGroup>
               </Col>

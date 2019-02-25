@@ -110,17 +110,19 @@ class Stay extends Component {
             <p>
               <b>{Locale[localStorage.getItem('LPC_beerTour_locale')].stay.theme}: </b>{this.state.theme.getName(localStorage.getItem("LPC_beerTour_locale"))}
             </p>
-            <ul>
+            <p>
               <b>{Locale[localStorage.getItem('LPC_beerTour_locale')].stay.activities}: </b>
-              {
-                this.state.activity.map(act => {
-                  return (
-                    <li key={Math.random()}> {act.getName(localStorage.getItem("LPC_beerTour_locale"))} </li>
-                  )
-                  // console.log(act.getName(localStorage.getItem("LPC_beerTour_locale")))
-                })
-              }
-            </ul>
+              <ul>
+                {
+                  this.state.activity.map(act => {
+                    return (
+                      <li key={Math.random()}> {act.getName(localStorage.getItem("LPC_beerTour_locale"))} </li>
+                    )
+                    // console.log(act.getName(localStorage.getItem("LPC_beerTour_locale")))
+                  })
+                }
+              </ul>
+            </p>
           </Panel.Body>
           <Panel.Footer>
             <Grid fluid>

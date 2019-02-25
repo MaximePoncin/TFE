@@ -17,9 +17,9 @@ const routes = [
     handler: (request, h) => {
       return fetch(StayManagerConf.uri + StayManagerConf.stayPath, {
         method: 'GET',
-        headers: {
-          'Authorization': request.headers.authorization,
-        }
+        // headers: {
+        //   'Authorization': request.headers.authorization,
+        // }
       })
       .then(response => {
         //console.log(response.json());

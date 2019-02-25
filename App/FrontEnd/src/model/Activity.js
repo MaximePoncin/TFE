@@ -29,6 +29,8 @@ export default class Activity {
   getName(lang) {
     const nameObj = _.find(this.descriptions, {"lang": lang});
 
+    console.log(nameObj)
+
     if(nameObj) {
       return nameObj.name;
     } else {

@@ -16,9 +16,7 @@ const routes =
     config: {
       tags: ['api'],
       description: "Get all themes in storage",
-      auth: {
-        scope: ["SuperAdmin", "Admin", "User"]
-      }
+      auth: false
     },
     handler: (request, h) => {
       return getAllThemes();
@@ -61,9 +59,7 @@ const routes =
           id: Joi.string().required()
         }
       },
-      auth: {
-        scope: ["SuperAdmin", "Admin", "User"]
-      }
+      auth: false
     },
     handler: (request, h) => {
       return getTheme(request.params.id)
