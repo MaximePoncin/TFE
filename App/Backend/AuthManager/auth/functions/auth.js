@@ -15,12 +15,17 @@ module.exports = (userId, userPasswd) => {
       scopeArr.push(user.role);
 
       const payload = {
+        userId: user.mail,
+        userName: {
+          firstName: user.person.givenName,
+          lastName: user.person.surname
+        },
         scope: scopeArr
       }
 
       return {
         token: createToken(payload),
-        user: user
+        // user: user
       };
     } else {
       throw new Error('Wrong credentials')
